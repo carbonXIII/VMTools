@@ -1,0 +1,4 @@
+#!/bin/bash
+
+HOST=$(/usr/bin/python3 -c "from config import config; print(config.hostname)")
+/usr/bin/gunicorn3 -b ${HOST}:8066 -w 1 service:api

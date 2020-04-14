@@ -1,0 +1,11 @@
+[Unit]
+Description=Tools for manipulating VM over http
+After=network.target
+
+[Service]
+WorkingDirectory=/opt/vmtools/
+ExecStart=/opt/vmtools/runner
+Restart=always
+
+[Install]
+WantedBy=multi-user.target

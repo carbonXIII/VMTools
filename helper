@@ -1,0 +1,10 @@
+#!/bin/bash
+
+DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null 2>&1 && pwd )"
+cd $DIR
+HOST=$(/usr/bin/python3 -c "from config import config; print(config.hostname)")
+
+for var in "$@"
+do
+    curl "$HOST:8066/$var"
+done

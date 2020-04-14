@@ -1,6 +1,6 @@
 #+TITLE: VMTools
 
-A set of tools for managing my VFIO setup. Might proove useful as a sample, but
+A set of tools for managing my VFIO setup. Might prove useful as a sample, but
 most likely won't work on most systems without changes.
 
 Manages the intialization of the VM, and attaching/detaching devices (including
@@ -8,4 +8,6 @@ a monitor, keyboard, and mouse). It runs as a systemd service and is accessible
 through an HTTP interface so that both the host and the guest have access,
 making it easy to add keyboard shortcuts to perform various functions.
 
-Make sure to ~git submodule init --update --recursive~ for pyddcci.
+Make sure to ~git submodule update --init --recursive~ for pyddcci.
+
+Next Goal: automatic GPU (un)binding

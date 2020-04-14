@@ -31,3 +31,4 @@ hostname = '192.168.86.26'
 # Scream Installation Paths
 scream_exec_path = '/opt/scream/Receivers/pulseaudio-ivshmem/scream-ivshmem-pulse'
 scream_shm_path = '/dev/shm/scream-ivshmem'
+pa_user = 1000

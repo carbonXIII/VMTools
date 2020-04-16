@@ -12,6 +12,8 @@ def post_init():
 
 @api.route('/startup', methods=['GET'])
 def startup():
+    scream.start()
+
     res = vm.startup(config.vm_name_hint)
     print('Starting', res[1].name(), '=', res[0], flush=True)
     return str(res[0])

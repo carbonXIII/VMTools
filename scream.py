@@ -14,7 +14,7 @@ def killer():
 def start():
     global process
 
-    if process is None:
+    if process is None or process.poll() is not None:
         if pa_user:
             # Impersonate pa_user to avoid issues with local PA servers
             print('Starting scream as uid={}'.format(pa_user))
@@ -30,5 +30,5 @@ def start():
 
         print('Started scream')
 
-    # make sure scream dies
-    atexit.register(killer)
+        # make sure scream dies
+        atexit.register(killer)

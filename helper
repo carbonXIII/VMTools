@@ -7,4 +7,5 @@ HOST=$(/usr/bin/python3 -c "from config import config; print(config.hostname)")
 for var in "$@"
 do
     curl "$HOST:8066/$var"
+    echo ""
 done

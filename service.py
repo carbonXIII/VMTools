@@ -1,4 +1,4 @@
-import devices, monitor, scream
+import vm, monitor, scream
 from config import config
 
 from flask import Flask
@@ -12,36 +12,44 @@ def post_init():
 
 @api.route('/startup', methods=['GET'])
 def startup():
-    print('Starting {}'.format(config.vm_name))
-    return str(devices.run('start {}'.format(config.vm_name)))
+    res = vm.startup(config.vm_name_hint)
+    print('Starting', res[1].name(), '=', res[0], flush=True)
+    return str(res[0])
 
 @api.route('/shutdown', methods=['GET'])
 def shutdown():
-    print('Shutting down {}'.format(config.vm_name))
-    return str(devices.run('shutdown {} --mode acpi'.format(config.vm_name)))
+    res = vm.shutdown(config.vm_name_hint)
+    print('Shutting down', res[1].name(), '=', res[0], flush=True)
+    return str(res[0])
 
 @api.route('/attach', methods=['GET'])
 def attach():
+    good = True
     for device,xml in config.devices.items():
-        print("Attaching {} to {}".format(device, config.vm_name))
-        if not devices.attach(config.vm_name, xml):
-            return str(False)
-    return str(True)
+        res = vm.attach(xml, config.vm_name_hint)
+        print('Attached', device, 'to', res[1].name(), '=', res[0], flush=True)
+        if not res[0]:
+            good = False
+    return str(good)
 
 @api.route('/detach', methods=['GET'])
 def detach():
+    good = True
+    print(len(config.devices.items()))
     for device,xml in config.devices.items():
-        print("Detaching {} from {}".format(device, config.vm_name))
-        if not devices.detach(config.vm_name, xml):
-            return str(False)
-    return str(True)
+        res = vm.detach(xml, config.vm_name_hint)
+        print('Detached', device, 'from', res[1].name(), '=', res[0], flush=True)
+        if not res[0]:
+            good = False
+    return str(good)
 
 @api.route('/show', methods=['GET'])
 def show():
     good = True
     for m,(shown,hidden) in config.monitors.items():
-        print('Showing VM (monitor: {}, input code: {})'.format(m, shown))
-        if not monitor.set_input(m, shown):
+        res = monitor.set_input(m, shown)
+        print('Showing VM ( monitor:', m, 'input code:', shown, ') =', res, flush=True)
+        if not res:
             good = False
     return str(good)
 
@@ -49,8 +57,9 @@ def show():
 def hide():
     good = True
     for m,(shown,hidden) in config.monitors.items():
-        print('Showing Host (monitor: {}, input code: {})'.format(m, hidden))
-        if not monitor.set_input(m, hidden):
+        res = monitor.set_input(m, hidden)
+        print('Hiding VM ( monitor:', m, 'input code:', hidden, ') =', res, flush=True)
+        if not res:
             good = False
     return str(good)
 
@@ -58,8 +67,9 @@ def hide():
 def toggle_hidden():
     good = True
     for m,(shown,hidden) in config.monitors.items():
-        print('Toggling View (monitor: {}, input codes: {},{})'.format(m,shown,hidden))
-        if not monitor.toggle_input(m, shown, hidden):
+        res = monitor.toggle_input(m, shown, hidden)
+        print('Toggle view ( monitor:', m, ') =', res, flush=True)
+        if not res:
             good = False
     return str(good)
 

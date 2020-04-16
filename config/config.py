@@ -11,12 +11,29 @@ def get_file(name):
     return '{}/{}'.format(path, name)
 
 # VM config
-vm_name = 'win10'
+vm_name_hint = 'win10'
 
-devices = {
-    'mouse': get_file('mouse.xml'),
-    'keyboard': get_file('keyboard.xml'),
-}
+devices = {}
+
+devices['keyboard'] = """
+<hostdev mode="subsystem" type="usb" managed="yes">
+  <source>
+    <vendor id="0x1532"/>
+    <product id="0x0203"/>
+  </source>
+  <address type="usb" bus="0" port="1"/>
+</hostdev>
+"""
+
+devices['mouse'] = """
+<hostdev mode="subsystem" type="usb" managed="yes">
+  <source>
+    <vendor id="0x12cf"/>
+    <product id="0x0219"/>
+  </source>
+  <address type="usb" bus="0" port="2"/>
+</hostdev>
+"""
 
 INPUT_DVI = 3
 INPUT_DP = 15

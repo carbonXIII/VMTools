@@ -1,2 +1,6 @@
 **/*.pyc
 **/__pycache__/
+**/build/
+
+zero/zerokeys/third_party/asio
+

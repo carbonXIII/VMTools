@@ -37,9 +37,11 @@ devices['mouse'] = """
 
 INPUT_DVI = 3
 INPUT_DP = 15
+INPUT_HDMI = 17
 
 monitors = {
-    1: (INPUT_DP,INPUT_DVI),
+    0: [INPUT_DP,INPUT_HDMI],
+    1: [INPUT_DP,INPUT_DVI,INPUT_HDMI],
 }
 
 # Service hostname

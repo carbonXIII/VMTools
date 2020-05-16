@@ -45,35 +45,19 @@ def detach():
             good = False
     return str(good)
 
-@api.route('/show', methods=['GET'])
-def show():
-    good = True
-    for m,(shown,hidden) in config.monitors.items():
-        res = monitor.set_input(m, shown)
-        print('Showing VM ( monitor:', m, 'input code:', shown, ') =', res, flush=True)
-        if not res:
-            good = False
-    return str(good)
+@api.route('/show/<int:sink>/<int:source>', methods=['GET'])
+def show(sink, source):
+    val = config.monitors[sink][source]
+    return str(monitor.set_input(sink, val))
 
-@api.route('/hide', methods=['GET'])
-def hide():
+@api.route('/toggle_hidden/<int:sink>/<int:A>/<int:B>', methods=['GET'])
+def toggle_hidden(sink, A, B):
     good = True
-    for m,(shown,hidden) in config.monitors.items():
-        res = monitor.set_input(m, hidden)
-        print('Hiding VM ( monitor:', m, 'input code:', hidden, ') =', res, flush=True)
-        if not res:
-            good = False
-    return str(good)
 
-@api.route('/toggle_hidden', methods=['GET'])
-def toggle_hidden():
-    good = True
-    for m,(shown,hidden) in config.monitors.items():
-        res = monitor.toggle_input(m, shown, hidden)
-        print('Toggle view ( monitor:', m, ') =', res, flush=True)
-        if not res:
-            good = False
-    return str(good)
+    a = config.monitors[sink][A]
+    b = config.monitors[sink][B]
+
+    return str(monitor.toggle_input(sink, a, b))
 
 if __name__ == '__main__':
     api.run()

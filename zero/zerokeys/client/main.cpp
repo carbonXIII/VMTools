@@ -65,7 +65,7 @@ struct KeyState {
     case SDL_SCANCODE_LGUI: mod[LGUI] = press; break;
     case SDL_SCANCODE_RCTRL: mod[RCTRL] = press; break;
     case SDL_SCANCODE_RSHIFT: mod[RSHIFT] = press; break;
-    case SDL_SCANCODE_RALT: mod[RALT] = press; break;
+    case SDL_SCANCODE_RALT: mod[LGUI] = press; break;
     case SDL_SCANCODE_RGUI: mod[RGUI] = press; break;
 
     default:
@@ -169,6 +169,11 @@ std::optional<asio::ip::tcp::endpoint> get_endpoint(asio::io_service& io_service
   return *res;
 }
 
+bool is_focused(SDL_Window* win) {
+  auto state = SDL_GetWindowFlags(win);
+  return state & SDL_WINDOW_MOUSE_FOCUS;
+}
+
 int main(int argc, char** argv) {
   if(argc < 2) {
     cerr << "Usage: " << argv[0] << " <host:port>\n";
@@ -234,17 +239,19 @@ int main(int argc, char** argv) {
       //   std::cerr << "here\n";
       // }
 
-      else if(event.type == SDL_MOUSEMOTION) {
-        ks.consume_mouse_motion(event.motion.xrel, event.motion.yrel);
-      }
+      else if(is_focused(win)) {
+        if(event.type == SDL_MOUSEMOTION) {
+          ks.consume_mouse_motion(event.motion.xrel, event.motion.yrel);
+        }
 
-      else if(event.type == SDL_MOUSEBUTTONDOWN || event.type == SDL_MOUSEBUTTONUP) {
-        cout << "here\n";
-        ks.consume_mouse_button(event.button.button, event.type == SDL_MOUSEBUTTONDOWN);
-      }
+        else if(event.type == SDL_MOUSEBUTTONDOWN || event.type == SDL_MOUSEBUTTONUP) {
+          cout << "here\n";
+          ks.consume_mouse_button(event.button.button, event.type == SDL_MOUSEBUTTONDOWN);
+        }
 
-      else if(event.type == SDL_MOUSEWHEEL) {
-        ks.consume_mouse_wheel(event.wheel.x, event.wheel.y);
+        else if(event.type == SDL_MOUSEWHEEL) {
+          ks.consume_mouse_wheel(event.wheel.x, event.wheel.y);
+        }
       }
     }
 

@@ -212,6 +212,11 @@ int main(int argc, char** argv) {
                                      SDL_WINDOWPOS_UNDEFINED,
                                      100, 100, win_flags);
 
+  SDL_Renderer* render = SDL_CreateRenderer(win, -1, 0);
+
+  SDL_RenderClear(render);
+  SDL_RenderPresent(render);
+
   SDL_SetRelativeMouseMode(SDL_TRUE);
 
   if(win == nullptr) {
@@ -226,6 +231,17 @@ int main(int argc, char** argv) {
     if(SDL_PollEvent(&event)) {
       if(event.type == SDL_QUIT) {
         break;
+      }
+
+      if(event.type == SDL_WINDOWEVENT) {
+        if(event.window.event == SDL_WINDOWEVENT_FOCUS_GAINED) {
+          SDL_SetRenderDrawColor(render, 255, 255, 255, 0);
+        } else if(event.window.event == SDL_WINDOWEVENT_FOCUS_LOST) {
+          SDL_SetRenderDrawColor(render, 0, 0, 0, 0);
+        }
+
+        SDL_RenderClear(render);
+        SDL_RenderPresent(render);
       }
 
       else if(event.type == SDL_KEYDOWN || event.type == SDL_KEYUP) {

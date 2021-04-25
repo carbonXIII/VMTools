@@ -12,6 +12,7 @@
 
 #include <iomanip>
 #include <iostream>
+#include <thread>
 
 using std::cout;
 using std::cerr;
@@ -227,7 +228,9 @@ int main(int argc, char** argv) {
   KeyState ks;
 
   SDL_Event event;
+  bool focused = 1;
   while(true) {
+    while(!SDL_WaitEvent(nullptr));
     if(SDL_PollEvent(&event)) {
       if(event.type == SDL_QUIT) {
         break;
@@ -235,8 +238,10 @@ int main(int argc, char** argv) {
 
       if(event.type == SDL_WINDOWEVENT) {
         if(event.window.event == SDL_WINDOWEVENT_FOCUS_GAINED) {
+          focused = 1;
           SDL_SetRenderDrawColor(render, 255, 255, 255, 0);
         } else if(event.window.event == SDL_WINDOWEVENT_FOCUS_LOST) {
+          focused = 0;
           SDL_SetRenderDrawColor(render, 0, 0, 0, 0);
         }
 
@@ -261,7 +266,6 @@ int main(int argc, char** argv) {
         }
 
         else if(event.type == SDL_MOUSEBUTTONDOWN || event.type == SDL_MOUSEBUTTONUP) {
-          cout << "here\n";
           ks.consume_mouse_button(event.button.button, event.type == SDL_MOUSEBUTTONDOWN);
         }
 
